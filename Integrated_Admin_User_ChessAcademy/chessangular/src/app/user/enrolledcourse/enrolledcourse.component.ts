@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-enrolledcourse',
@@ -24,14 +26,18 @@ export class EnrolledcourseComponent implements OnInit {
   editOption:boolean = true;
   addCommentButton=false;
   updateCommentButton = false;
+  username:any;
 
 
-  constructor(private service: UserService,private router: Router) {
+  constructor(private service: UserService,private router: Router,private _loginService: LoginService) {
+    this.username=this._loginService.usernameClicked;
 
    }
   ngOnInit(): void {
 
-    this.getEnrollCourse('prudhvi');
+    this.username = this._loginService.usernameClicked;
+    console.log(this.username);
+    this.getEnrollCourse(this.username);
     console.log(this.enrollCourses);
   }
   getEnrollCourse(name: string) {
@@ -43,7 +49,7 @@ export class EnrolledcourseComponent implements OnInit {
   deleteEnrollCourse(id: number) {
     this.service.deleteEnrollCourse(id).subscribe(res => {
       alert(res.toString() + "\n Relaod to update your enrolled courses");
-      window.location.reload();
+     // window.location.reload();
     })
   }
 
@@ -120,7 +126,7 @@ export class EnrolledcourseComponent implements OnInit {
       pincode:this.editFormGroup.get('pincode')?.value,
       statename:this.editFormGroup.get('state')?.value,
       nationality:this.editFormGroup.get('nationality')?.value,
-      studentName:'prudhvi',
+      studentName:this.username,
       academyName:(<HTMLInputElement>document.getElementById('editacademyName')).value,
       courseName:(<HTMLInputElement>document.getElementById('editcourseName')).value
   }
@@ -128,14 +134,14 @@ export class EnrolledcourseComponent implements OnInit {
   this.service.editEnrollCourse(enrollmentData).subscribe(res=>
     {
       alert(res.toString());
-      window.location.reload();
+      //window.location.reload();
     })
   }
 
   checkFeedback(data:any)
   {
     this.feedbackData = data;
-    this.service.checkComment('prudhvi',this.feedbackData.academyName,this.feedbackData.courseName).subscribe(
+    this.service.checkComment(this.username,this.feedbackData.academyName,this.feedbackData.courseName).subscribe(
       res=>
       {
         this.feedbackResults=res;
@@ -151,11 +157,11 @@ export class EnrolledcourseComponent implements OnInit {
     }
     else
     {
-      this.service.addComment('prudhvi',this.feedbackData.academyName,this.feedbackData.courseName,this.newFeedback).subscribe(
+      this.service.addComment(this.username,this.feedbackData.academyName,this.feedbackData.courseName,this.newFeedback).subscribe(
         res=>
         {
          alert(res.toString());
-         window.location.reload();
+        // window.location.reload();
         }
        )
     }
@@ -174,7 +180,6 @@ export class EnrolledcourseComponent implements OnInit {
       this.service.editComment(id,data).subscribe(res=>
         {
           alert(res.toString());
-          window.location.reload();
         }
       )
     }
@@ -186,7 +191,7 @@ export class EnrolledcourseComponent implements OnInit {
      this.service.deleteComment(id).subscribe(res=>
       {
         alert(res.toString());
-        window.location.reload();
+       // window.location.reload();
       }
       )
   }

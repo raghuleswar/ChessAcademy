@@ -14,7 +14,7 @@
 <!--General Retriving Courses-->
 <div class="row " style="margin:auto;" *ngIf="searchCourse.length==0">
     <div class="col-sm-4 mt-5" *ngFor="let item of CourseList">
-        <div class="card">
+        <div class="card w-100">
             <div class="card-body">
                 <h3 class="card-title text-center">{{item.coursename}}</h3>
                 <div class="card-text" style="overflow-x:auto;">
@@ -292,7 +292,8 @@
                                                 enrollForm.get('streetName')?.valid&&
                                                 enrollForm.get('areaName')?.valid&&
                                                 enrollForm.get('state')?.valid&&
-                                                enrollForm.get('nationality')?.valid)
+                                                enrollForm.get('nationality')?.valid&&
+                                                enrollForm.get('gender')?.valid)
                                                 ">
                                                 Enroll Now
                                             </button>
@@ -308,8 +309,8 @@
         </div>
     </div>
 </div>
-<div class="container mt-5" *ngIf="!isCoursePresent">
-    <div class="card text-center">
+<div class="mt-5" *ngIf="!isCoursePresent">
+    <div class="card w-100 text-center">
         <h3>No Courses are available in this academy</h3>
     </div>
 </div>
@@ -318,7 +319,7 @@
 <!--Searching Courses-->
 <div class="row " style="margin:auto;" *ngIf="searchCourse.length!=0">
     <div class="col-sm-4 mt-5" *ngFor="let item of sortCourseList">
-        <div class="card">
+        <div class="card w-100">
             <div class="card-body">
                 <h3 class="card-title text-center">{{item.coursename}}</h3>
                 <div class="card-text" style="overflow-x:auto;">
@@ -597,7 +598,8 @@
                                                 enrollForm.get('pincode')?.valid&&
                                                 enrollForm.get('emailId')?.valid&&
                                                 enrollForm.get('state')?.valid&&
-                                                enrollForm.get('nationality')?.valid)
+                                                enrollForm.get('nationality')?.valid&&
+                                                enrollForm.get('gender')?.valid)
                                                 ">
                                                 Enroll Now
                                             </button>
@@ -612,8 +614,8 @@
             </div>
         </div>
     </div>
-    <div class="container mt-5" *ngIf="sortCourseList.length==0">
-        <div class="card text-center">
+    <div class="mt-5" *ngIf="sortCourseList.length==0">
+        <div class="card text-center w-100">
             <h3>There are no courses with Name <span style="color: darkorange;">{{searchCourse}}</span></h3>
         </div>
     </div>

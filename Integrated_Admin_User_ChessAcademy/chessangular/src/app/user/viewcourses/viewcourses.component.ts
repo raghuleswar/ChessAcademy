@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Enrollment } from 'src/app/shared/enrollmentModel';
 import { UserService } from 'src/app/services/user.service';
 import { Router } from '@angular/router';
+import { LoginService } from 'src/app/services/login.service';
 
 
 
@@ -24,10 +25,15 @@ export class ViewcoursesComponent implements OnInit {
   commentCourseName:string='';
   commentList:any[] = [];
 
-  constructor(private service:UserService,private router: Router) { }
+  username:any;
+
+  constructor(private service:UserService,private router: Router,private _loginService: LoginService) {
+    
+   }
  
 
   ngOnInit(): void {
+    this.username = this._loginService.usernameClicked;
     this.academyName = this.service.academyNameClicked;
     this.getCourseList(this.academyName);
     this.enrollForm = new FormGroup({
@@ -67,7 +73,7 @@ export class ViewcoursesComponent implements OnInit {
     this.sortCourseList= [];
     for(let data of this.CourseList)
     {
-      if(data.courseName.toLowerCase().includes(this.searchCourse.toLowerCase()))
+      if(data.coursename.toLowerCase().includes(this.searchCourse.toLowerCase()))
       {
         this.sortCourseList.push(data);
       }
@@ -101,7 +107,7 @@ export class ViewcoursesComponent implements OnInit {
         pincode:this.enrollForm.get('pincode')?.value,
         statename:this.enrollForm.get('state')?.value,
         nationality:this.enrollForm.get('nationality')?.value,
-        studentName:'prudhvi',
+        studentName:this.username,
         academyName:this.academyName,
         courseName:this.courseName
     }

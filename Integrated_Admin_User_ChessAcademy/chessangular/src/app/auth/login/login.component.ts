@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
 
       // Reactive Forms Initilization & Validation
       LoginForm !: FormGroup;
+      userdata:any;
       ngOnInit(): void {
             this.LoginForm = new FormGroup({
                   'email': new FormControl(null, [Validators.required, Validators.email]),
@@ -42,44 +43,64 @@ export class LoginComponent implements OnInit {
             let _email = this.LoginForm.get('email')?.value;
             let _password = this.LoginForm.get('password')?.value;
 
-            //Change
             this._loginService.LoginCheck(_email, _password).subscribe({
                   next: (data) => {
-                        this.auth = data.allowed;
-                        this.user = data.user;
-                        this.role = data.userRole;
-                  
+                        this.userdata = data;
+                        console.log(this.userdata[0]);
+                        if(this.userdata[0]!='U')
+                        {
+                              if(this.userdata[0].userRole=="admin"){
+                                    this._loginService.router.navigate(['/admin/']);
+                                    this.toast.success({ detail: "Welcome Admin!", duration: 5000, summary: this.userdata[0].username + " Logged In !" })
+                              }
+                              else if(this.userdata[0].userRole=="user") {
+                                    this._loginService.router.navigate(['/user/']);
+                                    this._loginService.loginClicked.emit(this.userdata[0].username);
+                                    this.toast.success({ detail: "Welcome!", duration: 5000, summary: this.userdata[0].username + " Logged In !" })
+                              }
 
-                        console.log(data.allowed);
-                        console.log(data.message);
-                        console.log(data);
-                        this._userService.CurrentUser = data.user;
-                        this._userService.CurrentUserEmail = data.email;
-
-                        // Admin Login
-                        if (this.auth && (this.role === "admin")) {
-                              
-                              this._loginService.router.navigate(['/admin/']);
-                              this.toast.success({ detail: "Welcome Admin!", duration: 5000, summary: this.user + " Logged In !" })
                         }
-
-                        // User Login
-                        else if (this.auth && (this.role === "user")) {
-                              this._loginService.router.navigate(['/user/']);
-                              this.toast.success({ detail: "Welcome!", duration: 5000, summary: this.user + " Logged In !" })
+                        else{
+                              this.toast.error({ detail: "An Error Occured! Please check your credentials!!", duration: 4000 })
                         }
-
-                        // Invalid User/Admin
-                        else if (!this.auth) {
-                              this.toast.error({ detail: "Invalid User", duration: 5000, summary: "Please Check Username and Password !" })
-                        }
-                        console.log(this.auth)
-                  },
-                  error: (err) => {
-                        console.log(err);
-                        this.toast.error({ detail: "An Error Occured!", duration: 4000 })
                   }
-            });
+            })
+
+            //Change
+            // this._loginService.LoginCheck(_email, _password).subscribe({
+            //       next: (data) => {
+            //             this.auth = data.allowed;
+            //             this.user = data.user;
+            //             this.role = data.userRole;
+            //             this._loginService.loginClicked.emit(this.user);
+                        
+            //             this._userService.CurrentUser = data.user;
+            //             this._userService.CurrentUserEmail = data.email;
+
+            //             // Admin Login
+            //             if (this.auth && (this.role === "admin")) {
+                              
+            //                   this._loginService.router.navigate(['/admin/']);
+            //                   this.toast.success({ detail: "Welcome Admin!", duration: 5000, summary: this.user + " Logged In !" })
+            //             }
+
+            //             // User Login
+            //             else if (this.auth && (this.role === "user")) {
+            //                   this._loginService.router.navigate(['/user/']);
+            //                   this.toast.success({ detail: "Welcome!", duration: 5000, summary: this.user + " Logged In !" })
+            //             }
+
+            //             // Invalid User/Admin
+            //             else if (!this.auth) {
+            //                   this.toast.error({ detail: "Invalid User", duration: 5000, summary: "Please Check Username and Password !" })
+            //             }
+            //             console.log(this.auth)
+            //       },
+            //       error: (err) => {
+            //             console.log(err);
+            //             this.toast.error({ detail: "An Error Occured!", duration: 4000 })
+            //       }
+            // });
       }
       ToSignup() {
             this._loginService.router.navigate(['/auth/signup']);
